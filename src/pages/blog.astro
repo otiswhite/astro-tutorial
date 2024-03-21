@@ -1,18 +1,24 @@
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import BlogPost from "../components/BlogPost.astro";
+const pageTitle = "My Astro Blog";
 
-    <a href="/">Home</a>
-    <a href="/about/">About</a>
-    <a href="/blog/">Blog</a>	</body>
+// applying Collections
+// replacing Astro.glob() with getCollection as a way to fetch content and metdata from your Markdown files
+// const allPosts = await Astro.glob("../pages/posts/*.md");
+const allPosts = await getCollection("posts");
+---
 
-    <h1>My Astro Learning Blog</h1>
-    <p>This is where I will post about my journey learning Astro.</p>
-
-</html>
+<BaseLayout pageTitle={pageTitle}>
+  <p>This is where I will post about my journey learning Astro.</p>
+  <ul>
+    {
+      allPosts.map((post) => (
+        // applying Collections
+        // <BlogPost url={post.url} title={post.frontmatter.title} />
+        <BlogPost url={`/posts/${post.slug}/`} title={post.data.title} />
+      ))
+    }
+  </ul>
+</BaseLayout>
